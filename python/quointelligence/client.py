@@ -3,7 +3,7 @@ import re
 import requests
 
 from dateutil import parser as dateparser
-from datetime import  datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -16,7 +16,7 @@ def _datetime_str_to_utc(s):
     try:
         d = dateparser.isoparse(s)
     except ValueError:
-        raise ValueError('date string `%s` is not formatted properly' %s)
+        raise ValueError('date string `%s` is not formatted properly' % s)
     return d.astimezone(
         timezone.utc).isoformat(timespec='seconds').split('+', 1)[0]
 
@@ -40,20 +40,20 @@ class QIClient:
         http.mount("http://", adapter)
         self._http = http
 
-        response = self._http.post('%s/login' % API_URL,
-                                 json={
-                                     'email': email,
-                                     'password': password
-                                 },
-                                 verify=False,
-                                 headers={'Content-type': 'application/json'})
+        response = self._http.post(
+            '%s/login' % API_URL,
+            json={
+                'email': email,
+                'password': password
+            },
+            verify=False,
+            headers={'Content-type': 'application/json'})
 
         if response.status_code // 100 != 2:
-            raise ValueError('Received http error on authentication: %d: %s' %(
+            raise ValueError('Received http error on authentication: %d %s' % (
                 response.status_code, response.text))
 
         self._token = response.json()['access_token']
-
 
     def _query_endpoint(self, endpoint, since, date_range, qparams=None):
 
@@ -76,9 +76,9 @@ class QIClient:
         if since is not None:
             match = re.match(r'([1-9]\d*)([mhd])', since)
             if match is None:
-                example: '2d: 2 days. 1h: 1 hour, 3m: 3 minutes'
+                example = '2d: 2 days. 1h: 1 hour, 3m: 3 minutes'
                 raise ValueError(
-                    '`since` is not formatted properly: %s. Example: %s' %(
+                    '`since` is not formatted properly: %s. Example: %s' % (
                         since, example))
             value = int(match.group(1))
             unit = match.group(2)
@@ -92,11 +92,10 @@ class QIClient:
             since = (datetime.utcnow() - delta).isoformat(timespec='seconds')
             until = datetime.utcnow().isoformat(timespec='seconds')
 
-        url = f'{API_URL}/{endpoint}'
+        url = API_URL + '/' + endpoint
 
         logger.debug('About to query %s with date range (%s, %s)',
                      url, since, until)
-
 
         tickets = []
 
@@ -111,10 +110,10 @@ class QIClient:
                 url, params=qparams, verify=False,
                 headers={
                     'Content-type': 'application/json',
-                    'Authorization': f'Bearer %s' %self._token
+                    'Authorization': 'Bearer %s' % self._token
                     })
             if response.status_code // 100 != 2:
-                raise Exception('HTTP error occured %s' %response.text)
+                raise Exception('HTTP error occured %s' % response.text)
             t = response.json()
             tickets += t
             if len(t) == 0:
@@ -127,9 +126,9 @@ class QIClient:
     def ticket(self, id):
         id = int(id)
         response = self._http.get(
-            '%s/ticket/%d' %(API_URL, id), verify=False,
+            '%s/ticket/%d' % (API_URL, id), verify=False,
             headers={
                 'Content-type': 'application/json',
-                'Authorization': f'Bearer %s' %self._token
+                'Authorization': 'Bearer %s' % self._token
                 })
         return response.json()
