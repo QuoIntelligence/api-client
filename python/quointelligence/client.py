@@ -72,8 +72,7 @@ class QIClient:
             since, until = date_range
             since = _datetime_str_to_utc(since)
             until = _datetime_str_to_utc(until)
-
-        if since is not None:
+        elif since is not None:
             match = re.match(r'([1-9]\d*)([mhd])', since)
             if match is None:
                 example = '2d: 2 days. 1h: 1 hour, 3m: 3 minutes'
