@@ -8,7 +8,8 @@ In your Python environment (preferrably a virtual one using `venv`), execute
 this command:
 
 ```shell
-pip install -e 'git+https://github.com/QuoIntelligence/api-client.git#egg=quointelligence&subdirectory=python'
+pip install -e \
+  'git+https://github.com/QuoIntelligence/api-client.git#egg=quointelligence&subdirectory=python'
 ```
 
 # Documentation
