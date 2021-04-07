@@ -1,3 +1,16 @@
+'''
+Copyright 2021 QuoIntelligence GmbH
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+'''
+
 import logging
 import re
 import requests
@@ -24,6 +37,10 @@ def _datetime_str_to_utc(s):
 class QIClient:
 
     def __init__(self, email, password):
+        '''
+        Instantiate a client given Mercury credentials
+        '''
+
         if type(email) is not str:
             raise TypeError('email should be a string')
         if type(password) is not str:
@@ -120,9 +137,21 @@ class QIClient:
         return tickets
 
     def drp(self, since=None, date_range=None):
+        '''
+        Query brand protection tickets
+
+        examples:
+        tickets = client.drp(since='1h')   # 1 hour
+        tickets = client.drp(since='15m')  # 15 minutes
+        tickets = client.drp(since='40m')  # 40 days
+        tickets = client.drp(date_range=('2020-10-01', '2021-04-07'))
+        '''
         return self._query_endpoint('drp', since, date_range)
 
     def ticket(self, id):
+        '''
+        Get ticket details given the ticket id
+        '''
         id = int(id)
         response = self._http.get(
             '%s/ticket/%d' % (API_URL, id), verify=False,
