@@ -22,7 +22,7 @@ from requests.packages.urllib3.util.retry import Retry
 
 logger = logging.getLogger(__file__)
 
-API_URL = 'https://api.quointelligence.eu/v0-alpha'
+API_URL = 'https://api.quointelligence.eu'
 
 
 def _datetime_str_to_utc(s):
