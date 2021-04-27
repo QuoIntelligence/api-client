@@ -49,7 +49,7 @@ class QIClient:
         retry_strategy = Retry(
             total=3,
             status_forcelist=[429, 500, 502, 503, 504],
-            method_whitelist=["HEAD", "GET", "OPTIONS"]
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         http = requests.Session()
@@ -57,8 +57,16 @@ class QIClient:
         http.mount("http://", adapter)
         self._http = http
 
+        # check redirect (only one is expected)
+        self._url = API_URL
+        response = requests.get(f'{self._url}/docs', allow_redirects=False)
+        if response.status_code in (301, 302):
+            self._url = response.headers.get('location')[:-5]
+            logger.debug('Changed url to %s based on %d redirect',
+                         self._url, response.status_code)
+
         response = self._http.post(
-            '%s/login' % API_URL,
+            '%s/login' % self._url,
             json={
                 'email': email,
                 'password': password
@@ -108,7 +116,7 @@ class QIClient:
             since = (datetime.utcnow() - delta).isoformat(timespec='seconds')
             until = datetime.utcnow().isoformat(timespec='seconds')
 
-        url = API_URL + '/' + endpoint
+        url = self._url + '/' + endpoint
 
         logger.debug('About to query %s with date range (%s, %s)',
                      url, since, until)
@@ -154,7 +162,7 @@ class QIClient:
         '''
         id = int(id)
         response = self._http.get(
-            '%s/ticket/%d' % (API_URL, id), verify=False,
+            '%s/ticket/%d' % (self._url, id), verify=False,
             headers={
                 'Content-type': 'application/json',
                 'Authorization': 'Bearer %s' % self._token
