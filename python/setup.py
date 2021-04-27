@@ -23,5 +23,6 @@ setup(name='quointelligence',
       packages=['quointelligence'],
       install_requires=[
           'requests',
+          'python_dateutil',
       ],
       zip_safe=False)
