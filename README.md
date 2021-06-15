@@ -6,8 +6,10 @@ This project is licensed under the Apache License - see the [LICENSE file](/LICE
 
 This is the Python Client module for QuoIntelligence API.
 
-# Python implementation
-# Setup
+# Documentation
+The API is fully documented in this URL: https://api.quointelligence.eu/v0.1/docs#/
+
+# Python Client implementation
 
 In your Python environment (preferrably a virtual one using `venv`), execute
 this command:
@@ -17,9 +19,7 @@ pip install -e \
   'git+https://github.com/QuoIntelligence/api-client.git#egg=quointelligence&subdirectory=python'
 ```
 
-# Documentation
-
-`QIClient` is the main class of this package. To view its documentation, execute
+The `QIClient` is the main class of this package. To view its documentation, execute
 the following in your Python shell:
 
 ```python
