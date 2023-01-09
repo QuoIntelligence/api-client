@@ -28,10 +28,10 @@ logger = logging.getLogger(__file__)
 
 def _datetime_str_to_utc(s):
     try:
-        d = dateparser.isoparse(s)
+        d = dateparser.isoparse(s).astimezone(timezone.utc)
     except ValueError:
         raise ValueError("date string `%s` is not formatted properly" % s)
-    return d.astimezone(timezone.utc).isoformat(timespec="seconds").split("+", 1)[0]
+    return d.isoformat(timespec="seconds").split("+", 1)[0]
 
 
 class QIClient:
@@ -44,7 +44,8 @@ class QIClient:
 
     def __init__(self, email=None, password=None, cert=None, url=None):
         """
-        Build a new client. Configure by setting parameters, or by environment variable:
+        Build a new client. Configure by setting parameters, or by environment
+        variable:
             QI_API_EMAIL          Client account email address
             QI_API_PASSWORD       Client password
             QI_API_URL            (if using other than the default URL)

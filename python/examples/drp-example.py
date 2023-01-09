@@ -34,7 +34,7 @@ for ticket in tickets:
 # Ticket fetch more details
 for ticket in client.drp(since="30d"):
     more = client.ticket(ticket["id"])
-    print(f"\nTicket summary vs more detail:", ticket, more, sep="\n  ")
+    print("\nTicket summary vs more detail:", ticket, more, sep="\n  ")
     break
 else:
     print("no tickets matched that condition")
