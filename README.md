@@ -45,3 +45,26 @@ client = QIClient()
 tickets = client.drp(since='60d')  # get drp tickets in the past 60 days
 ticket = client.ticket('1234')  # get ticket details of ticket with id 1234
 ```
+
+# Configuration
+
+The `QIClient()` constructor accepts parameters directly, or from the environment.
+
+Direct configuration:
+```python
+client = QIClient(
+  url='https://mercury.quointelligence.eu/api/public',
+  email='john.smith@example.com',
+  password='<password>',
+)
+...
+```
+
+Environmental configuration:
+```bash
+export QI_API_URL='https://mercury.quointelligence.eu/api/public'
+export QI_API_EMAIL='john.smith@example.com'
+export QI_API_PASSWORD='<password>'
+python my_script.py
+```
+
