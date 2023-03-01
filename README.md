@@ -19,6 +19,13 @@ pip install -e \
   'git+https://github.com/QuoIntelligence/api-client.git#egg=quointelligence&subdirectory=python'
 ```
 
+or for a specific version, eg `v0.1.0`:
+
+```shell
+pip install -e \
+  'git+https://github.com/QuoIntelligence/api-client.git@v0.1.0#egg=quointelligence&subdirectory=python'
+```
+
 The `QIClient` is the main class of this package. To view its documentation, execute
 the following in your Python shell:
 
@@ -29,11 +36,12 @@ help(quointelligence.client.QIClient)
 
 # Example Usage
 
+(also see the `python/example` folder)
 ```python
 
 from quointelligence import QIClient
 
-client = QIClient('<user name>', '<password>')
+client = QIClient()
 tickets = client.drp(since='60d')  # get drp tickets in the past 60 days
 ticket = client.ticket('1234')  # get ticket details of ticket with id 1234
 ```
