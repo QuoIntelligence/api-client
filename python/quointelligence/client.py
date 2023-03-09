@@ -1,5 +1,5 @@
 """
-Copyright 2021 QuoIntelligence GmbH
+Copyright 2023 QuoIntelligence GmbH
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -14,7 +14,7 @@ limitations under the License.
 import logging
 import re
 from typing import Dict, Optional, Tuple, Generator
-import requests
+from requests import Session, Response
 import os
 
 from dateutil import parser as dateparser
@@ -37,6 +37,7 @@ def _datetime_str_to_utc(s):
 class QIClient:
     DEFAULT_URL = "https://api.quointelligence.eu/v0.1"
     LOGIN_PATH = "/login"
+    CATALOGS_PATH = "/catalogs/%s"
     DRP_PATH = "/drp"
     INTELLIGENCE_PATH = "/intelligence"
     SERVICE_REQUESTS_PATH = "/service-requests"
@@ -78,7 +79,7 @@ class QIClient:
             allowed_methods=["HEAD", "GET", "OPTIONS"],
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
-        http = requests.Session()
+        http = Session()
         http.mount("https://", adapter)
         http.mount("http://", adapter)
         http.cert = cert
@@ -143,6 +144,26 @@ class QIClient:
 
         return {}  # no filter
 
+    def catalogs(self, name: str) -> list[dict]:
+        """
+        Query a catalog - fetch all entries from the named catalog, one of:
+          - attcks
+          - locations
+          - malware_kits
+          - sectors
+          - sources
+          - technologies
+          - threat_actors
+        """
+        path = self._url + (self.CATALOGS_PATH % name)
+        response: Response = self._http.get(path, headers=self._headers())
+        try:
+            response.raise_for_status()
+        except HTTPError:
+            raise ValueError("Error occurred accessing %s: %s" % (path, response.text))
+
+        return response.json()
+
     def _query_endpoint(
         self,
         path: str,
@@ -161,7 +182,7 @@ class QIClient:
         logger.debug("Querying %s with parameters (%s)", path, params)
 
         while True:
-            response = self._http.get(
+            response: Response = self._http.get(
                 self._url + path, params=params, headers=self._headers()
             )
 
