@@ -11,20 +11,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from setuptools import setup
+from collections import defaultdict
+from quointelligence import QIClient
 
-setup(
-    name="quointelligence",
-    version="0.1.0",
-    description="Python client for Quointelligence API",
-    url="https://github.com/QuoIntelligence/api-client/releases/tag/v0.1",
-    author="Quointelligence GmbH",
-    author_email="info@quointelligence.eu",
-    license="Apache 2",
-    packages=["quointelligence"],
-    install_requires=[
-        "requests",
-        "python_dateutil",
-    ],
-    zip_safe=False,
-)
+client = QIClient()
+
+# Fetch all sectors
+sectors = client.catalogs("sectors")
+
+# Print results as an indented tree
+children = defaultdict(list)
+for sector in sectors:
+    children[sector["id_parent"]].append(sector)
+
+
+def printNode(sector: dict, margin=""):
+    print(f"{margin}{sector['id']}: {sector['name']}")
+    for child in children[sector["id"]]:
+        printNode(child, margin + "    ")
+
+
+print("Sectors:")
+for top in children[0]:
+    printNode(top)
