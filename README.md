@@ -6,8 +6,9 @@ This project is licensed under the Apache License - see the [LICENSE file](/LICE
 
 This is the Python Client module for QuoIntelligence API.
 
-# Documentation
-The API is fully documented in this URL: https://api.quointelligence.eu/v0.1/docs#/
+# Documentation 
+The API is documented in this URL: https://mercury.test.quointelligence.eu/api/public/docs/index.html  
+_(You must login first to https://mercury.quointelligence.eu)_
 
 # Python Client implementation
 
