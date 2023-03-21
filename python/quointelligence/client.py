@@ -35,7 +35,7 @@ def _datetime_str_to_utc(s):
 
 
 class QIClient:
-    DEFAULT_URL = "https://api.quointelligence.eu/v0.1"
+    DEFAULT_URL = "https://mercury.quointelligence.eu/api"
     LOGIN_PATH = "/login"
     CATALOGS_PATH = "/catalogs/%s"
     DRP_PATH = "/drp"
