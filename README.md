@@ -69,3 +69,9 @@ export QI_API_PASSWORD='<password>'
 python my_script.py
 ```
 
+Clients can authenticate to the API via email+password as above, or with a provided API key:
+```bash
+export QI_API_URL='https://mercury.quointelligence.eu/api/public'
+export QI_API_KEY='mercury_key_1.QmUgc3VyZSB0byBkcmluayB5b3VyIG92YWx0aW5l'
+python my_script.py
+```

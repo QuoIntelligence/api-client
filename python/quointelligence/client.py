@@ -43,22 +43,25 @@ class QIClient:
     SERVICE_REQUESTS_PATH = "/service-requests"
     TICKET_PATH = "/ticket/%d"
 
-    def __init__(self, email=None, password=None, cert=None, url=None):
+    def __init__(self, email=None, password=None, key=None, cert=None, url=None):
         """
         Build a new client. Configure by setting parameters, or by environment
         variable:
             QI_API_EMAIL          Client account email address
             QI_API_PASSWORD       Client password
+            QI_API_KEY            Client API Key (if specified overrides email+password)
             QI_API_URL            (if using other than the default URL)
             QI_API_CLIENT_CERT    (if needed, path to client SSL certificate)
         """
 
         # Parse configuration
         try:
-            email = email or os.environ["QI_API_EMAIL"]
-            password = password or os.environ["QI_API_PASSWORD"]
-            cert = cert or os.environ.get("QI_API_CLIENT_CERT", None)
+            key = key or os.environ.get("QI_API_KEY", None)
+            if not key:
+                email = email or os.environ["QI_API_EMAIL"]
+                password = password or os.environ["QI_API_PASSWORD"]
 
+            cert = cert or os.environ.get("QI_API_CLIENT_CERT", None)
             self._url: str = (
                 url or os.environ.get("QI_API_URL", self.DEFAULT_URL)
             ).strip("/")
@@ -85,19 +88,22 @@ class QIClient:
         http.cert = cert
         self._http = http
 
-        # Login and get authentication token
-        self._token = None
-        response = self._http.post(
-            self._url + self.LOGIN_PATH,
-            json={"email": email, "password": password},
-            headers=self._headers(),
-        )
-        try:
-            response.raise_for_status()
-        except HTTPError:
-            raise ValueError("Authentication failure")
+        if key:
+            self._token = key
+        else:
+            # Login and get authentication token
+            self._token = None
+            response = self._http.post(
+                self._url + self.LOGIN_PATH,
+                json={"email": email, "password": password},
+                headers=self._headers(),
+            )
+            try:
+                response.raise_for_status()
+            except HTTPError:
+                raise ValueError("Authentication failure")
 
-        self._token = response.json()["access_token"]
+            self._token = response.json()["access_token"]
 
     def _headers(self) -> Dict[str, str]:
         """Provide standard request headers"""
