@@ -39,6 +39,7 @@ class QIClient:
     LOGIN_PATH = "/login"
     CATALOGS_PATH = "/catalogs/%s"
     DRP_PATH = "/drp"
+    VULNERABILITIES_PATH = "/vulnerabilities"
     INTELLIGENCE_PATH = "/intelligence"
     SERVICE_REQUESTS_PATH = "/service-requests"
     TICKET_PATH = "/ticket/%d"
@@ -160,6 +161,7 @@ class QIClient:
           - sources
           - technologies
           - threat_actors
+          - vulnerabilities
         """
         path = self._url + (self.CATALOGS_PATH % name)
         response: Response = self._http.get(path, headers=self._headers())
@@ -227,6 +229,25 @@ class QIClient:
         tickets = client.drp(date_range=('2020-10-01', '2021-04-07'))
         """
         yield from self._query_endpoint(self.DRP_PATH, since, date_range, params)
+
+    def vulnerability_alerts(
+        self,
+        since: Optional[str] = None,
+        date_range: Optional[Tuple[str, str]] = None,
+        params: Optional[Dict[str, any]] = None,
+    ) -> Generator[dict, None, None]:
+        """
+        Query vulnerability alerts for this customer
+
+        examples:
+        tickets = client.vulnerability_alerts(since='1h')   # 1 hour
+        tickets = client.vulnerability_alerts(since='15m')  # 15 minutes
+        tickets = client.vulnerability_alerts(since='40d')  # 40 days
+        tickets = client.vulnerability_alerts(date_range=('2020-10-01', '2021-04-07'))
+        """
+        yield from self._query_endpoint(
+            self.VULNERABILITIES_PATH, since, date_range, params
+        )
 
     def intelligence(
         self,
