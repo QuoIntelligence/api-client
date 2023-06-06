@@ -16,8 +16,11 @@ from quointelligence import QIClient
 client = QIClient()
 
 # Fetching vulnerabilities
-vulnerabilities = client.catalogs("vulnerabilities")
-print("Found", len(vulnerabilities), "vulnerabilities in the catalog")
+try:
+    vulnerabilities = client.catalogs("vulnerabilities")
+    print("Found", len(vulnerabilities), "vulnerabilities in the catalog")
+except ValueError as err:
+    print(str(err))
 
 # Fetching vulnerability alerts
 alerts = list(client.vulnerability_alerts("7d"))
