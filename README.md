@@ -1,3 +1,9 @@
+
+> [!WARNING]
+> The API this project references has been superseded.  
+> For the latest information, please see
+> https://mercury.quointelligence.eu/api/public/docs/index.html
+
 # QuoIntelligence Public API 
 
 QuoIntelligence provides a REST API for customer use.  
