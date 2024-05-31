@@ -2,7 +2,7 @@
 > [!WARNING]
 > The API this project references has been superseded.  
 > For the latest information, please see
-> https://mercury.quointelligence.eu/api/public/docs/index.html
+> https://mercury.quointelligence.eu/api/v0/docs/index.html
 
 # QuoIntelligence Public API 
 
