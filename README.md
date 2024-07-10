@@ -1,7 +1,9 @@
 
 > [!WARNING]
-> The API this project references has been superseded.  
-> For the latest information, please see
+> This project is not recommended for new integrations.  
+> The library depends on a legacy set of API endpoints.
+> 
+> For documentation on the latest, comprehensive API, please see  
 > https://mercury.quointelligence.eu/api/v0/docs/index.html
 
 # QuoIntelligence Public API 
